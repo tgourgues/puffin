@@ -6,11 +6,16 @@ add_library(standard INTERFACE)
 add_library(Puffin::standard ALIAS standard)
 
 target_include_directories(standard
-  INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..>
   INTERFACE $<INSTALL_INTERFACE:include>
 )
 
-set(CMAKE_CXX_STANDARD 14)
+target_compile_features(standard 
+  INTERFACE
+    cxx_constexpr
+    cxx_variadic_templates
+    cxx_lambdas
+)
 
 install(DIRECTORY include/ DESTINATION include)
 
@@ -27,7 +32,7 @@ install(EXPORT PfnStandardTargets
   NAMESPACE
     Puffin::
   DESTINATION
-    lib/cmake/pfnstd
+    lib/cmake/pfn
 )
 
 export(TARGETS standard FILE PfnStandardTargets.cmake NAMESPACE Puffin::)

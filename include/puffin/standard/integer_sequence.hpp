@@ -1,10 +1,10 @@
 //  ____         __  __ _       
 // |  _ \ _   _ / _|/ _(_)_ __  
-// | |_) | | | | |_| |_| | '_ \ 
+// | |_) | | | | |_| |_| | '_  | 
 // |  __/| |_| |  _|  _| | | | |
 // |_|    \__,_|_| |_| |_|_| |_|          
 //
-// Copyright (c) 2011-2018 thomas.gourgues@gmail.com
+// Copyright (c) 2011-2019 thomas.gourgues@gmail.com
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,8 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#ifndef INTEGER_SEQUENCE_HPP
-#define INTEGER_SEQUENCE_HPP
+#ifndef PFN_INTEGER_SEQUENCE_HPP
+#define PFN_INTEGER_SEQUENCE_HPP
 
 #include <cstddef>
 
@@ -79,4 +79,4 @@ using make_index_sequence = make_integer_sequence<size_t, N>;
 template<typename... T>
 using index_sequence_for = make_index_sequence<sizeof...(T)>;
 
-#endif // INTEGER_SEQUENCE_HPP
+#endif // PFN_INTEGER_SEQUENCE_HPP

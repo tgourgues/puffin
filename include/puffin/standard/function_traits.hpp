@@ -1,10 +1,10 @@
 //  ____         __  __ _       
 // |  _ \ _   _ / _|/ _(_)_ __  
-// | |_) | | | | |_| |_| | '_ \ 
+// | |_) | | | | |_| |_| | '_  | 
 // |  __/| |_| |  _|  _| | | | |
 // |_|    \__,_|_| |_| |_|_| |_|          
 //
-// Copyright (c) 2011-2018 thomas.gourgues@gmail.com
+// Copyright (c) 2011-2019 thomas.gourgues@gmail.com
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
