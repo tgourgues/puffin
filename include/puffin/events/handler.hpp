@@ -27,7 +27,7 @@
 #ifndef PFN_HANDLER_HPP
 #define PFN_HANDLER_HPP
 
-namespace cxe {
+namespace pfn {
 namespace events {
 
 template<typename Event>

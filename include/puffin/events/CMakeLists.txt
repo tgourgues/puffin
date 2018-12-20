@@ -7,12 +7,15 @@ add_library(Puffin::events ALIAS events)
 
 target_include_directories(events
   INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..>
-  INTERFACE $<INSTALL_INTERFACE:include>
+  INTERFACE $<INSTALL_INTERFACE:include/events>
+)
+
+target_compile_features(events
+  INTERFACE
+    cxx_std_14
 )
 
 target_link_libraries(events INTERFACE Puffin::standard)
-
-set(CMAKE_CXX_STANDARD 14)
 
 install(DIRECTORY include/ DESTINATION include)
 

@@ -8,7 +8,7 @@ ExternalProject_Add(
     catch
     PREFIX ${CMAKE_BINARY_DIR}/catch
     GIT_REPOSITORY https://github.com/philsquared/Catch.git
-    GIT_TAG v2.0.1
+    GIT_TAG v2.5.0
     TIMEOUT 2
     CONFIGURE_COMMAND ""
     BUILD_COMMAND ""
@@ -16,6 +16,6 @@ ExternalProject_Add(
     LOG_DOWNLOAD ON
    )
 
-set(CATCH_INCLUDE_DIR ${CMAKE_BINARY_DIR}/catch/src/catch/single_include)
+set(CATCH_INCLUDE_DIR ${CMAKE_BINARY_DIR}/catch/src/catch/single_include/catch2)
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_INCLUDE_DIR})

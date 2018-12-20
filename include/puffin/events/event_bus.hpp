@@ -39,7 +39,7 @@
 
 struct void_t {};
 
-namespace cxe {
+namespace pfn {
 namespace events {
 
 template<typename T, typename = typename T::type>

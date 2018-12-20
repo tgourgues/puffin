@@ -29,7 +29,7 @@
 
 #include <functional>
 
-namespace cxe {
+namespace pfn {
 namespace events {
 
 template<typename... Events>
