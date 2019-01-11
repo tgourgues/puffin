@@ -33,23 +33,21 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#ifndef PFN_EVENT_HPP
-#define PFN_EVENT_HPP
 
-#include <functional>
+#ifndef PFN_URI_EXCEPTIONS_HPP
+#define PFN_URI_EXCEPTIONS_HPP
+
+#include <exception>
 
 namespace pfn {
-namespace events {
 
-template<typename... Events>
-struct event_pack {};
-
-template<typename... Events>
-struct events {
-  using type = event_pack<Events...>;
+class parsing_exception : public std::exception {
+public:
+  const char* what() const noexcept {
+    return "Failed to parse object";
+  }
 };
 
 }
-}
 
-#endif // PFN_EVENT_HPP
+#endif // PFN_URI_EXCEPTIONS_HPP

@@ -33,23 +33,45 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#ifndef PFN_EVENT_HPP
-#define PFN_EVENT_HPP
 
-#include <functional>
+#include "catch.hpp"
+#include "puffin/uri.hpp"
 
-namespace pfn {
-namespace events {
+TEST_CASE( "Url can be parsed or not", "[uri]" ) {
 
-template<typename... Events>
-struct event_pack {};
+    SECTION("Url is valid") {
+      pfn::uri valid_uri("http://www.google.fr/path/to/12#toto?param=&params2=45");
+      REQUIRE(valid_uri.scheme() == "http");
+      REQUIRE(valid_uri.host() == "www.google.fr");
+      REQUIRE(valid_uri.path() == "/path/to/12");
+      REQUIRE(valid_uri.fragment() == "toto");
+      REQUIRE(valid_uri.query_string() == "param=&params2=45");
+    }
 
-template<typename... Events>
-struct events {
-  using type = event_pack<Events...>;
-};
+    SECTION("Secure Url is valid") {
+      pfn::uri valid_uri("http://www.google.fr/path/to/12#toto?param=&params2=45");
+      REQUIRE(valid_uri.scheme() == "http");
+      REQUIRE(valid_uri.host() == "www.google.fr");
+      REQUIRE(valid_uri.path() == "/path/to/12");
+      REQUIRE(valid_uri.fragment() == "toto");
+      REQUIRE(valid_uri.query_string() == "param=&params2=45");
+    }
 
+     SECTION("Url is valid") {
+       pfn::uri valid_uri("http://www.google.fr");
+       REQUIRE(valid_uri.scheme() == "http");
+       REQUIRE(valid_uri.host() == "www.google.fr");
+       REQUIRE(valid_uri.path() == "/");
+     }
+
+    SECTION("Path is valid") {
+      pfn::uri valid_uri("/path/to/12#toto?param=&params2=45");
+      REQUIRE(valid_uri.path() == "/path/to/12");
+      REQUIRE(valid_uri.fragment() == "toto");
+      REQUIRE(valid_uri.query_string() == "param=&params2=45");
+    }
+
+    SECTION("Url is invalid") {
+      REQUIRE_THROWS(pfn::uri("htt://www.google.fr/path/to/12#toto?param=123"));
+    }
 }
-}
-
-#endif // PFN_EVENT_HPP

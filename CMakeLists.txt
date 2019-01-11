@@ -7,6 +7,7 @@ option(BUILD_SAMPLES ON)
 
 add_subdirectory(include/puffin/standard)
 add_subdirectory(include/puffin/events)
+add_subdirectory(include/puffin/uri)
 
 if(BUILD_SAMPLES)
     add_subdirectory(samples)

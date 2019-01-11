@@ -33,23 +33,65 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#ifndef PFN_EVENT_HPP
-#define PFN_EVENT_HPP
 
-#include <functional>
+#ifndef PFN_URI_PARSER_HPP
+#define PFN_URI_PARSER_HPP
+
+#include "uri_exceptions.hpp"
+
+#include <regex>
+#include <string>
 
 namespace pfn {
-namespace events {
 
-template<typename... Events>
-struct event_pack {};
+template <typename P> class basic_uri;
 
-template<typename... Events>
-struct events {
-  using type = event_pack<Events...>;
+struct regex_parser {
+  const int group_scheme = 1;
+  const int group_username = 2;
+  const int group_password = 3;
+  const int group_host = 4;
+  const int group_port = 5;
+  const int group_path = 6;
+  const int group_fragment = 7;
+  const int group_query_parameters = 8;
+
+  template <typename P>
+  void parse(basic_uri<P>& uri, const std::string& url) {
+    std::regex re(R"(^)"
+                  R"((?:(http[s]?|ftp)://)"   // Scheme
+                  R"((?:(\S*):(\S*)@)?)"      // User : Pass @
+                  R"(([\w\-\.]+))"          // Host
+                  R"((?::([0-9]{2,5}))?)?)"  // Port
+                  R"((/[\S][^#\?]+)?)"      // Path
+                  R"(/?)"
+                  R"((?:#([\S][^\?]+))?)"     // Fragment
+                  R"(/?)"
+                  R"((?:\?(([^&]*=[^&]*&?)*))?)" // Query parameters
+                  R"($)");
+
+    std::smatch matches;
+
+    if (std::regex_match(url, matches, re)) {
+      uri.scheme_ = matches[group_scheme].str();
+      uri.host_ = matches[group_host].str();
+
+      std::string port = matches[group_port].str();
+      if (port.size() > 0) {
+        uri.port_ = std::stoi(port);
+      }
+
+      uri.path_ = matches[group_path].str();
+      uri.fragment_ = matches[group_fragment].str();
+
+      // Extracting query parameters
+      uri.query_string_ = matches[group_query_parameters].str();
+    } else {
+      throw new parsing_exception();
+    }
+  }
 };
 
 }
-}
 
-#endif // PFN_EVENT_HPP
+#endif // PFN_URI_PARSER_HPP
