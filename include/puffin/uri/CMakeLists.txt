@@ -19,7 +19,7 @@ target_link_libraries(uri INTERFACE Puffin::standard)
 
 install(DIRECTORY include/ DESTINATION include)
 
-install(TARGETS standard EXPORT PfnUriTargets
+install(TARGETS uri EXPORT PfnUriTargets
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib

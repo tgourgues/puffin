@@ -19,7 +19,7 @@ target_link_libraries(events INTERFACE Puffin::standard)
 
 install(DIRECTORY include/ DESTINATION include)
 
-install(TARGETS standard EXPORT PfnEventsTargets
+install(TARGETS events EXPORT PfnEventsTargets
   RUNTIME DESTINATION bin
   ARCHIVE DESTINATION lib
   LIBRARY DESTINATION lib
