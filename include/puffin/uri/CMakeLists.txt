@@ -7,7 +7,7 @@ add_library(Puffin::uri ALIAS uri)
 
 target_include_directories(uri
   INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..>
-  INTERFACE $<INSTALL_INTERFACE:include/events>
+  INTERFACE $<INSTALL_INTERFACE:include>
 )
 
 target_compile_features(uri
