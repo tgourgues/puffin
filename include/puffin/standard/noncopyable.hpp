@@ -34,65 +34,23 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef PFN_FUNCTION_TRAITS_HPP
-#define PFN_FUNCTION_TRAITS_HPP
+#ifndef PFN_NONCOPYABLE_HPP
+#define PFN_NONCOPYABLE_HPP
 
-#include <functional>
-#include <tuple>
+namespace pfn {
 
-template<typename T>
-struct function_argument { static const int value = 0x0; };
+///
+/// Disallow copy and assign on child objects
+///
+class noncopyable {
+public:
+  noncopyable() {}
+  virtual ~noncopyable() {}
 
-template<>
-struct function_argument<int> { static const int value = 0x1; };
-
-template<>
-struct function_argument<std::string> { static const int value = 0x2; };
-
-template<>
-struct function_argument<float> { static const int value = 0x3; };
-
-template<>
-struct function_argument<bool> { static const int value = 0x4; };
-
-template<typename... Args>
-struct function_tag;
-
-template<>
-struct function_tag<> {
-  static const int value = 0;
+  noncopyable(const noncopyable&) = delete;
+  const noncopyable& operator=(const noncopyable&) = delete;
 };
 
-template<typename Arg, typename... Args>
-struct function_tag<Arg, Args...> {
-  static const uint64_t value = function_tag<Args...>::value | function_argument<Arg>::value << (4 * sizeof...(Args));
-};
+}
 
-template<typename F>
-struct function_traits : public function_traits<decltype(&F::operator())> {
-};
-
-template <typename Return, typename... Args>
-struct function_traits<Return(Args...)> {
-  typedef Return return_type;
-  
-  template<size_t N>
-  using arg_type = typename std::tuple_element<N, std::tuple<Args...>>::type;
-
-  static constexpr size_t arity = sizeof...(Args);
-
-  static constexpr uint64_t tag = function_tag<Args...>::value;
-  static constexpr int values[] = { function_argument<Args>::value... };
-};
-
-template<typename Class, typename Return, typename... Args>
-struct function_traits<Return(Class::*)(Args...) const> : public function_traits<Return(Args...)> {
-  using class_type = Class;
-};
-
-template <typename F>
-struct function_traits<std::function<F>>
-    : public function_traits<F>
-{};
-
-#endif // PFN_FUNCTION_TRAITS_HPP
+#endif // PFN_NONCOPYABLE_HPP

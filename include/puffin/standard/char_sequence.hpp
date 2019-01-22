@@ -34,65 +34,26 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef PFN_FUNCTION_TRAITS_HPP
-#define PFN_FUNCTION_TRAITS_HPP
+#ifndef PFN_CHAR_SEQUENCE_HPP
+#define PFN_CHAR_SEQUENCE_HPP
 
-#include <functional>
-#include <tuple>
+#include "integer_sequence.hpp"
 
-template<typename T>
-struct function_argument { static const int value = 0x0; };
-
-template<>
-struct function_argument<int> { static const int value = 0x1; };
-
-template<>
-struct function_argument<std::string> { static const int value = 0x2; };
-
-template<>
-struct function_argument<float> { static const int value = 0x3; };
-
-template<>
-struct function_argument<bool> { static const int value = 0x4; };
-
-template<typename... Args>
-struct function_tag;
-
-template<>
-struct function_tag<> {
-  static const int value = 0;
+template<char... Char>
+struct char_sequence {
+  static constexpr char value[] = { Char... };
+  static constexpr size_t size = sizeof...(Char);
 };
 
-template<typename Arg, typename... Args>
-struct function_tag<Arg, Args...> {
-  static const uint64_t value = function_tag<Args...>::value | function_argument<Arg>::value << (4 * sizeof...(Args));
+template<size_t N, const char (&s)[N], typename T>
+struct create_char_sequence;
+
+template<size_t N, const char (&s)[N], size_t... Int>
+struct create_char_sequence<N, s, index_sequence<Int...>> {
+  using type = char_sequence<s[Int]...>;
 };
 
-template<typename F>
-struct function_traits : public function_traits<decltype(&F::operator())> {
-};
+template<size_t N, const char (&s)[N]>
+using make_char_sequence = typename create_char_sequence<sizeof(s), s, typename make_index_sequence<sizeof(s)>::type>::type;
 
-template <typename Return, typename... Args>
-struct function_traits<Return(Args...)> {
-  typedef Return return_type;
-  
-  template<size_t N>
-  using arg_type = typename std::tuple_element<N, std::tuple<Args...>>::type;
-
-  static constexpr size_t arity = sizeof...(Args);
-
-  static constexpr uint64_t tag = function_tag<Args...>::value;
-  static constexpr int values[] = { function_argument<Args>::value... };
-};
-
-template<typename Class, typename Return, typename... Args>
-struct function_traits<Return(Class::*)(Args...) const> : public function_traits<Return(Args...)> {
-  using class_type = Class;
-};
-
-template <typename F>
-struct function_traits<std::function<F>>
-    : public function_traits<F>
-{};
-
-#endif // PFN_FUNCTION_TRAITS_HPP
+#endif // PFN_CHAR_SEQUENCE_HPP

@@ -34,65 +34,62 @@
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-#ifndef PFN_FUNCTION_TRAITS_HPP
-#define PFN_FUNCTION_TRAITS_HPP
+#ifndef PFN_PATH_LITERAL_HPP
+#define PFN_PATH_LITERAL_HPP
 
-#include <functional>
-#include <tuple>
+#include "string_literal.hpp"
 
-template<typename T>
-struct function_argument { static const int value = 0x0; };
+template<size_t N>
+constexpr bool is_int(const string_literal<N>& rhs, size_t pos) {
+  return rhs.compare_n("{Int}", pos);
+}
 
-template<>
-struct function_argument<int> { static const int value = 0x1; };
+template<size_t N>
+constexpr bool is_string(const string_literal<N>& rhs, size_t pos) {
+  return rhs.compare_n("{String}", pos);
+}
 
-template<>
-struct function_argument<std::string> { static const int value = 0x2; };
+template<size_t N>
+constexpr bool is_float(const string_literal<N>& rhs, size_t pos) {
+  return rhs.compare_n("{Float}", pos);
+}
 
-template<>
-struct function_argument<float> { static const int value = 0x3; };
+template<size_t N>
+constexpr bool is_bool(const string_literal<N>& rhs, size_t pos) {
+  return rhs.compare_n("{Bool}", pos);
+}
 
-template<>
-struct function_argument<bool> { static const int value = 0x4; };
+template<size_t N>
+constexpr int tag_for_path_type(const string_literal<N>& rhs, size_t pos) {
+  return is_int(rhs, pos) ?
+           0x1 :
+           is_string(rhs, pos) ?
+             0x2 :
+             is_float(rhs, pos) ?
+              0x03 :
+              is_bool(rhs, pos) ?
+                0x04 :
+                0;
 
-template<typename... Args>
-struct function_tag;
+}
 
-template<>
-struct function_tag<> {
-  static const int value = 0;
-};
+template<size_t N>
+constexpr uint64_t tag_for_path_r(const string_literal<N>& rhs, size_t pos, size_t r = 0) {
+  return pos > 0 ?
+           rhs[pos] == '{' ?
+             tag_for_path_type(rhs, pos) << (r * 4) | tag_for_path_r(rhs, pos - 1, r + 1)
+             : tag_for_path_r(rhs, pos-1, r)
+           : 0;
+}
 
-template<typename Arg, typename... Args>
-struct function_tag<Arg, Args...> {
-  static const uint64_t value = function_tag<Args...>::value | function_argument<Arg>::value << (4 * sizeof...(Args));
-};
+template<size_t N>
+constexpr uint64_t tag_for_path(const string_literal<N>& rhs) {
+  return tag_for_path_r(rhs, N-1, 0);
+}
 
-template<typename F>
-struct function_traits : public function_traits<decltype(&F::operator())> {
-};
+template<size_t N>
+void re_for_path(const string_literal<N>& rhs) {
 
-template <typename Return, typename... Args>
-struct function_traits<Return(Args...)> {
-  typedef Return return_type;
-  
-  template<size_t N>
-  using arg_type = typename std::tuple_element<N, std::tuple<Args...>>::type;
+}
 
-  static constexpr size_t arity = sizeof...(Args);
-
-  static constexpr uint64_t tag = function_tag<Args...>::value;
-  static constexpr int values[] = { function_argument<Args>::value... };
-};
-
-template<typename Class, typename Return, typename... Args>
-struct function_traits<Return(Class::*)(Args...) const> : public function_traits<Return(Args...)> {
-  using class_type = Class;
-};
-
-template <typename F>
-struct function_traits<std::function<F>>
-    : public function_traits<F>
-{};
-
-#endif // PFN_FUNCTION_TRAITS_HPP
+#endif // PFN_PATH_LITERAL_HPP
