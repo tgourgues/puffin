@@ -5,3 +5,9 @@ target_link_libraries(sample_logging Puffin::logging)
 
 add_executable(sample_event_bus "sample_event_bus.cpp")
 target_link_libraries(sample_event_bus Puffin::events)
+
+add_executable(sample_path_literal "sample_path_literal.cpp")
+target_link_libraries(sample_path_literal Puffin::standard)
+
+add_executable(sample_rest_router "sample_rest_router.cpp")
+target_link_libraries(sample_rest_router Puffin::standard)

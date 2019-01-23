@@ -15,6 +15,7 @@ target_compile_features(standard
     cxx_constexpr
     cxx_variadic_templates
     cxx_lambdas
+    cxx_raw_string_literals
 )
 
 install(DIRECTORY include/ DESTINATION include)
