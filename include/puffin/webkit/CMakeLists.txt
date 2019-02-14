@@ -5,7 +5,7 @@ project(puffin_webkit)
 add_library(webkit INTERFACE)
 add_library(Puffin::webkit ALIAS webkit)
 
-target_include_directories(uri
+target_include_directories(webkit
   INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../..>
   INTERFACE $<INSTALL_INTERFACE:include>
 )

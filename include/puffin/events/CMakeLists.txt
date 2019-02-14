@@ -12,7 +12,8 @@ target_include_directories(events
 
 target_compile_features(events
   INTERFACE
-    cxx_std_14
+    cxx_variadic_templates
+    cxx_relaxed_constexpr
 )
 
 target_link_libraries(events INTERFACE Puffin::standard)
