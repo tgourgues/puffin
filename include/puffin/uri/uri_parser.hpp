@@ -56,6 +56,7 @@ struct regex_parser {
   const int group_fragment = 7;
   const int group_query_parameters = 8;
 
+  /// (?:(http[s]?|ftp):\/\/)(?:(\S*):(\S*)@)?([\w\-\.]+)(?::([0-9]{2,5}))?(\/[\S][^#\?]+)?\/?(?:#([\S][^\?]+))?\/?(?:\?(([^&]*=[^&]*&?)*))?
   template <typename P>
   void parse(basic_uri<P>& uri, const std::string& url) {
     std::regex re(R"(^)"
