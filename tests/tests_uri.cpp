@@ -49,8 +49,8 @@ TEST_CASE( "Url can be parsed or not", "[uri]" ) {
     }
 
     SECTION("Secure Url is valid") {
-      pfn::uri valid_uri("http://www.google.fr/path/to/12#toto?param=&params2=45");
-      REQUIRE(valid_uri.scheme() == "http");
+      pfn::uri valid_uri("https://www.google.fr/path/to/12#toto?param=&params2=45");
+      REQUIRE(valid_uri.scheme() == "https");
       REQUIRE(valid_uri.host() == "www.google.fr");
       REQUIRE(valid_uri.path() == "/path/to/12");
       REQUIRE(valid_uri.fragment() == "toto");
