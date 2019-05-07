@@ -4,3 +4,6 @@
 [submodule "cmake"]
 	path = cmake
 	url = git@github.com:4thlabs/puffin.cmake.git
+[submodule "events"]
+	path = events
+	url = git@github.com:4thlabs/puffin.events.git
