@@ -33,23 +33,65 @@
 // CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 // OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#ifndef PFN_EVENT_HPP
-#define PFN_EVENT_HPP
 
-#include <functional>
+#include <puffin/standard/path_literal.hpp>
+#include <puffin/standard/call_traits.hpp>
 
-namespace pfn {
-namespace events {
+#include <iostream>
 
-template<typename... Events>
-struct event_pack {};
+struct bs {
 
-template<typename... Events>
-struct events {
-  using type = event_pack<Events...>;
 };
 
-}
+template<typename F, size_t N>
+constexpr bool compare_compiletime(string_literal<N> r, F f) {
+
+  return false;
 }
 
-#endif // PFN_EVENT_HPP
+template<typename F, size_t N>
+bool compare_runtime(string_literal<N> r, F&& f) {
+
+  return false;
+}
+
+int main(int argc, char** argv) {
+
+   constexpr auto l = "/test/{id: Int}/tutu/{toto: String}/{String}"_sl;
+   constexpr auto l2 = "/test/{Int}/tutu"_sl;
+
+   auto f = [](int i, std::string s, std::string s2) {
+     return 0;
+   };
+
+   auto f2 = [](int i, std::string s, std::string s2, bs p) {
+     return 0;
+   };
+
+   static_assert((call_traits<decltype(f)>::tag % tag_for_path(l)) == 0, "Route handler parameters are wrong");
+
+   constexpr long i1 = 0xF;
+   constexpr long i2 = 0xA;
+   constexpr int i3 = i1 | (i2 << 4);
+
+   call_traits<decltype(f)>::result_type t;
+
+   //bool res = compare_compiletime(l2, f);
+
+   for (int i = 0; i < call_traits<decltype(f)>::arity; i++) {
+     std::cout << call_traits<decltype(f)>::values[i] << std::endl;
+   }
+
+   int index = 2;
+   constexpr int i = l.find_first_of('{', 0);
+   constexpr bool b = is_int(l, l.find_first_of('{', 0));
+
+   static_assert(b, "is not string");
+
+   bool equal = (l == "/test/{Int}/tutu");
+   std::cout << (l == "/test/{Int}/tutu") << " " << call_argument<call_traits<decltype(f)>::arg<1>::type>::value << " " << l.find_first_of('{', 8) << std::endl;
+   std::cout << "Tag from call: " << std::hex << call_traits<decltype(f)>::tag << std::endl;
+   std::cout << "Tag from path: " << std::hex << tag_for_path(l) << std::endl;
+
+   return 0;
+}
