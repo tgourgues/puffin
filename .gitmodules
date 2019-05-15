@@ -7,3 +7,6 @@
 [submodule "events"]
 	path = events
 	url = git@github.com:4thlabs/puffin.events.git
+[submodule "webkit"]
+	path = webkit
+	url = git@github.com:4thlabs/puffin.webkit.git
