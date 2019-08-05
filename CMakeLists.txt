@@ -6,3 +6,4 @@ file(COPY ${CMAKE_SOURCE_DIR}/cmake/PuffinHelpers.cmake DESTINATION ${CMAKE_BINA
 
 add_subdirectory(common)
 add_subdirectory(events)
+add_subdirectory(webkit)
